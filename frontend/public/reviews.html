@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Reviews</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/reviews.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="header-left">
+          <h1 class="title">Customer Reviews</h1>
+          <p class="subtitle">Share your experience. Your feedback helps others shop confidently.</p>
+        </div>
+        <div class="header-right">
+          <div class="avg">
+            <div class="avg-top">
+              <span class="avg-rating" id="avgRating">0.0</span>
+              <span class="avg-outof">/ 5</span>
+            </div>
+            <div class="avg-stars" id="avgStars" aria-label="Average rating"></div>
+            <div class="avg-meta" id="avgMeta">0 reviews</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <section class="card form-card">
+          <h2 class="card-title">Write a review</h2>
+
+          <form id="reviewForm" class="form" novalidate>
+            <div class="row">
+              <div class="field">
+                <label for="name">Name <span class="req">*</span></label>
+                <input id="name" name="name" type="text" placeholder="Your name" autocomplete="name" required />
+                <div class="error" data-error-for="name"></div>
+              </div>
+              <div class="field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+                <div class="error" data-error-for="email"></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Rating <span class="req">*</span></label>
+              <div class="star-input" role="radiogroup" aria-label="Rating">
+                <button type="button" class="star" data-value="1" aria-label="1 star">★</button>
+                <button type="button" class="star" data-value="2" aria-label="2 stars">★</button>
+                <button type="button" class="star" data-value="3" aria-label="3 stars">★</button>
+                <button type="button" class="star" data-value="4" aria-label="4 stars">★</button>
+                <button type="button" class="star" data-value="5" aria-label="5 stars">★</button>
+                <input type="hidden" id="rating" name="rating" value="" required />
+              </div>
+              <div class="hint" id="ratingHint">Click stars to rate</div>
+              <div class="error" data-error-for="rating"></div>
+            </div>
+
+            <div class="field">
+              <label for="message">Review <span class="req">*</span></label>
+              <textarea id="message" name="message" rows="5" placeholder="Tell us what you liked (or didn’t)..." required></textarea>
+              <div class="error" data-error-for="message"></div>
+            </div>
+
+            <div class="actions">
+              <button type="submit" class="btn primary" id="submitBtn">Submit Review</button>
+              <button type="button" class="btn ghost" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="toast" id="toast" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <section class="card list-card">
+          <div class="list-head">
+            <h2 class="card-title">Latest reviews</h2>
+            <button class="btn small" id="refreshBtn" type="button">Refresh</button>
+          </div>
+
+          <div class="skeleton" id="loading">Loading reviews...</div>
+          <div class="empty" id="empty" hidden>No reviews yet. Be the first to write one.</div>
+
+          <div class="reviews" id="reviews"></div>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <a href="/" class="footer-link">Back to Home</a>
+      </footer>
+    </main>
+
+    <script src="/reviews.js"></script>
+  </body>
+</html>

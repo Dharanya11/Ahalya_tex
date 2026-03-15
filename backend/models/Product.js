@@ -1,0 +1,65 @@
+import mongoose from 'mongoose';
+
+const productSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
+    },
+    images: [String],
+    description: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    countInStock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    // Specific fields from the frontend data
+    size: String,
+    color: String,
+    material: String,
+    weave: String,
+    care: String,
+    sizes: [String],
+    colors: [String],
+    customizable: {
+      type: Boolean,
+      default: false,
+    },
+    discountPercent: {
+      type: Number,
+      default: 0,
+    },
+    offerActive: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const Product = mongoose.model('Product', productSchema);
+
+export default Product;

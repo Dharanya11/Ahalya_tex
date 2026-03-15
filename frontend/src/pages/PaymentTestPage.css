@@ -1,0 +1,395 @@
+/* Payment Test Page Styles */
+.payment-test-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F3E6D6, #E8DCC8);
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Test Header */
+.test-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #8B5A2B, #A0714F);
+  color: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(139, 90, 43, 0.2);
+}
+
+.test-header h1 {
+  margin: 0 0 16px 0;
+  font-size: 36px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.test-header p {
+  margin: 0;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* Test Controls */
+.test-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.amount-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.amount-control label {
+  font-weight: 600;
+  color: #3B2614;
+  font-size: 14px;
+}
+
+.amount-control input {
+  padding: 8px 12px;
+  border: 2px solid #E8DCC8;
+  border-radius: 6px;
+  font-size: 16px;
+  width: 120px;
+  transition: border-color 0.3s ease;
+}
+
+.amount-control input:focus {
+  outline: none;
+  border-color: #8B5A2B;
+}
+
+.reset-btn {
+  padding: 8px 16px;
+  background: #8B5A2B;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+  background: #6B4A1F;
+  transform: translateY(-1px);
+}
+
+/* Payment Container */
+.payment-container {
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+/* Payment Result */
+.payment-result {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: resultFadeIn 0.5s ease;
+}
+
+.result-success h2 {
+  color: #2E7D32;
+  font-size: 28px;
+  margin: 0 0 24px 0;
+  font-weight: 700;
+}
+
+.result-error h2 {
+  color: #C62828;
+  font-size: 28px;
+  margin: 0 0 24px 0;
+  font-weight: 700;
+}
+
+.result-details {
+  background: #F8F9FA;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 24px 0;
+  text-align: left;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.result-details p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #6D4C3A;
+}
+
+.result-details strong {
+  color: #3B2614;
+}
+
+.result-error p {
+  font-size: 16px;
+  color: #C62828;
+  margin-bottom: 24px;
+}
+
+/* Button Styles */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: #8B5A2B;
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: #6B4A1F;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 90, 43, 0.3);
+}
+
+/* Test Info */
+.test-info {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.test-info h3 {
+  margin: 0 0 24px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #3B2614;
+  text-align: center;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.info-item h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #8B5A2B;
+}
+
+.info-item ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.info-item li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #6D4C3A;
+  line-height: 1.5;
+}
+
+.info-item li::marker {
+  color: #8B5A2B;
+}
+
+/* Animations */
+@keyframes resultFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-test-page {
+    padding: 20px 16px;
+  }
+
+  .test-header {
+    padding: 32px 20px;
+    margin-bottom: 32px;
+  }
+
+  .test-header h1 {
+    font-size: 28px;
+  }
+
+  .test-header p {
+    font-size: 16px;
+  }
+
+  .test-controls {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .amount-control {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .amount-control input {
+    width: 150px;
+  }
+
+  .payment-container {
+    margin-bottom: 32px;
+  }
+
+  .payment-result {
+    padding: 32px 24px;
+  }
+
+  .result-success h2,
+  .result-error h2 {
+    font-size: 24px;
+  }
+
+  .test-info {
+    padding: 24px 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-test-page {
+    padding: 16px 12px;
+  }
+
+  .test-header {
+    padding: 24px 16px;
+    margin-bottom: 24px;
+  }
+
+  .test-header h1 {
+    font-size: 24px;
+  }
+
+  .test-controls {
+    padding: 12px;
+  }
+
+  .amount-control {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .amount-control input {
+    width: 100%;
+  }
+
+  .payment-result {
+    padding: 24px 16px;
+  }
+
+  .result-success h2,
+  .result-error h2 {
+    font-size: 20px;
+  }
+
+  .result-details {
+    padding: 16px;
+  }
+
+  .test-info {
+    padding: 20px 16px;
+  }
+
+  .info-item h4 {
+    font-size: 16px;
+  }
+
+  .info-item li {
+    font-size: 13px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .payment-test-page {
+    background: linear-gradient(135deg, #2C2C2C, #1A1A1A);
+  }
+
+  .test-controls,
+  .payment-result,
+  .test-info {
+    background: #2C2C2C;
+    color: #FFFFFF;
+  }
+
+  .amount-control label {
+    color: #FFFFFF;
+  }
+
+  .amount-control input {
+    background: #1A1A1A;
+    border-color: #4A4A4A;
+    color: #FFFFFF;
+  }
+
+  .amount-control input:focus {
+    border-color: #8B5A2B;
+  }
+
+  .test-info h3 {
+    color: #FFFFFF;
+  }
+
+  .info-item h4 {
+    color: #8B5A2B;
+  }
+
+  .info-item li {
+    color: #B0B0B0;
+  }
+
+  .result-details {
+    background: #1A1A1A;
+  }
+
+  .result-details p {
+    color: #B0B0B0;
+  }
+
+  .result-details strong {
+    color: #FFFFFF;
+  }
+}

@@ -1,0 +1,237 @@
+/* ==============================
+   Ahalya Tex Footer (Base)
+   Dark luxury theme with gold accent
+   ============================== */
+
+:root {
+  --ah-footer-bg: #120606;        /* deep maroon-black */
+  --ah-footer-bg2: #0b0404;
+  --ah-footer-text: #f2f2f2;
+  --ah-footer-muted: #cfc7c7;
+  --ah-footer-accent: #c8a24a;    /* gold */
+  --ah-footer-line: rgba(200, 162, 74, 0.22);
+}
+
+/* Footer wrapper */
+.ah-footer {
+  background: linear-gradient(180deg, var(--ah-footer-bg), var(--ah-footer-bg2));
+  color: var(--ah-footer-text);
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+/* Container */
+.ah-footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 18px 22px;
+}
+
+/* ==============================
+   4-Column Layout
+   ============================== */
+.ah-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+}
+
+.ah-footer__col {
+  min-width: 0;
+}
+
+/* Section Titles */
+.ah-footer__title {
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+  color: var(--ah-footer-text);
+  position: relative;
+}
+
+.ah-footer__title::after {
+  content: "";
+  display: block;
+  width: 46px;
+  height: 2px;
+  margin-top: 10px;
+  background: var(--ah-footer-accent);
+  opacity: 0.9;
+  border-radius: 2px;
+}
+
+/* ==============================
+   Column 1 – Brand Info
+   ============================== */
+.ah-footer__brand {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  color: var(--ah-footer-text);
+}
+
+.ah-footer__tagline {
+  margin: 0 0 14px;
+  color: var(--ah-footer-accent);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.ah-footer__desc {
+  margin: 0;
+  color: var(--ah-footer-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-width: 36ch;
+}
+
+/* ==============================
+   Column 2 & 3 – Link Lists
+   ============================== */
+.ah-footer a {
+  color: var(--ah-footer-muted);
+  text-decoration: none;
+  transition: color 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+.ah-footer a:hover,
+.ah-footer a:focus-visible {
+  color: var(--ah-footer-accent);
+  outline: none;
+}
+
+.ah-footer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ah-footer__list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.ah-footer__list a::before {
+  content: "›";
+  color: var(--ah-footer-accent);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.ah-footer__list a:hover::before {
+  transform: translate(3px, -1px);
+  opacity: 1;
+}
+
+/* ==============================
+   Column 4 – Contact Info
+   ============================== */
+.ah-footer__info {
+  display: grid;
+  gap: 12px;
+  color: var(--ah-footer-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-style: normal; /* keep address semantic but non-italic */
+}
+
+.ah-footer__info strong {
+  color: var(--ah-footer-text);
+  font-weight: 700;
+}
+
+.ah-footer__link {
+  color: var(--ah-footer-muted);
+}
+
+/* ==============================
+   Social Media
+   ============================== */
+.ah-footer__social {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ah-footer__socialLink {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(200, 162, 74, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ah-footer-text);
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.ah-footer__socialLink:hover,
+.ah-footer__socialLink:focus-visible {
+  transform: translateY(-2px);
+  background: rgba(200, 162, 74, 0.12);
+  border-color: rgba(200, 162, 74, 0.6);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.ah-footer__socialLink svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* ==============================
+   Bottom Section
+   ============================== */
+.ah-footer__divider {
+  margin: 28px 0 14px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ah-footer-line), transparent);
+}
+
+.ah-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  color: rgba(242, 242, 242, 0.85);
+  font-size: 0.9rem;
+}
+
+/* ==============================
+   Responsive
+   ============================== */
+@media (max-width: 992px) {
+  .ah-footer__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  .ah-footer__desc {
+    max-width: 55ch;
+  }
+}
+
+@media (max-width: 560px) {
+  .ah-footer__container {
+    padding: 44px 14px 20px;
+  }
+
+  .ah-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

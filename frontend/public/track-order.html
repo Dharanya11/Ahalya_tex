@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Track Order | Windsurf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/track-order.css" />
+  </head>
+  <body>
+    <main class="page" aria-label="Track Order">
+      <header class="header">
+        <div>
+          <h1 class="title">Track your order</h1>
+          <p class="subtitle">Enter your tracking number to see live delivery status and location updates.</p>
+        </div>
+        <a class="link" href="/">Back to Home</a>
+      </header>
+
+      <section class="grid grid--single">
+        <section class="card" aria-label="Tracking search">
+          <h2 class="cardTitle">Tracking number</h2>
+
+          <div class="searchRow">
+            <input
+              id="trackingInput"
+              type="text"
+              placeholder="e.g. WS-1700000000000-AB12CD"
+              autocomplete="off"
+              inputmode="text"
+              aria-label="Tracking number"
+            />
+            <button id="trackBtn" class="btn primary" type="button">Track</button>
+          </div>
+
+          <div class="hint">Format: letters/numbers with optional dashes. Example: <strong>WS-...</strong></div>
+          <div id="error" class="error" role="alert" aria-live="polite"></div>
+
+          <div id="loading" class="loading" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <div>Fetching latest updates…</div>
+          </div>
+
+          <div id="summary" class="summary" hidden>
+            <div class="summaryTop">
+              <div>
+                <div class="label">Order Status</div>
+                <div id="status" class="status">—</div>
+              </div>
+              <div class="right">
+                <div class="label">Estimated Delivery</div>
+                <div id="eta" class="eta">—</div>
+              </div>
+            </div>
+
+            <div class="meta">
+              <div><span class="metaKey">Tracking:</span> <span id="trackingNumber">—</span></div>
+              <div><span class="metaKey">Order ID:</span> <span id="orderId">—</span></div>
+              <div><span class="metaKey">Last Update:</span> <span id="updatedAt">—</span></div>
+              <div><span class="metaKey">Last Location:</span> <span id="lastLocation">—</span></div>
+            </div>
+
+            <div class="steps" aria-label="Delivery steps">
+              <div class="step" data-step="Placed"><div class="dot"></div><div class="stepLabel">Placed</div></div>
+              <div class="step" data-step="Packed"><div class="dot"></div><div class="stepLabel">Packed</div></div>
+              <div class="step" data-step="Shipped"><div class="dot"></div><div class="stepLabel">Shipped</div></div>
+              <div class="step" data-step="Out for Delivery"><div class="dot"></div><div class="stepLabel">Out for Delivery</div></div>
+              <div class="step" data-step="Delivered"><div class="dot"></div><div class="stepLabel">Delivered</div></div>
+            </div>
+
+            <div class="refreshNote" id="refreshNote">Auto-refreshing live location every ~12 seconds.</div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/track-order.js"></script>
+  </body>
+</html>

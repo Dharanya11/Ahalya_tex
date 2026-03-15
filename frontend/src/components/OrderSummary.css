@@ -1,0 +1,382 @@
+/* Order Summary Component Styles */
+.order-summary {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.order-summary:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Summary Header */
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #8B5A2B, #A0714F);
+  color: #FFFFFF;
+}
+
+.summary-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Loading State */
+.order-summary.loading .loading-content {
+  padding: 40px 24px;
+  text-align: center;
+  color: #6D4C3A;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #E8DCC8;
+  border-top: 4px solid #8B5A2B;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+.loading-content p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Error State */
+.order-summary.error .error-content {
+  padding: 40px 24px;
+  text-align: center;
+  color: #721C24;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-content p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.retry-btn {
+  background: #8B5A2B;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  background: #6B4A1F;
+  transform: translateY(-1px);
+}
+
+/* Summary Items */
+.summary-items {
+  padding: 20px 24px;
+  border-bottom: 1px solid #E8DCC8;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #F3E6D6;
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.item-info h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3B2614;
+  line-height: 1.4;
+}
+
+.item-details {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+  color: #6D4C3A;
+}
+
+.item-price {
+  font-weight: 500;
+}
+
+.item-quantity {
+  background: #F3E6D6;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.item-total {
+  text-align: right;
+  font-weight: 600;
+  color: #3B2614;
+}
+
+.item-discount {
+  font-size: 12px;
+  color: #4CAF50;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* Summary Breakdown */
+.summary-breakdown {
+  padding: 20px 24px;
+  background: #F8F9FA;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #6D4C3A;
+}
+
+.breakdown-row.discount {
+  color: #4CAF50;
+}
+
+.breakdown-row.total {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px solid #8B5A2B;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3B2614;
+}
+
+.total-amount {
+  color: #8B5A2B;
+  font-size: 20px;
+}
+
+/* Summary Footer */
+.summary-footer {
+  padding: 16px 24px;
+  background: #F8F9FA;
+  border-top: 1px solid #E8DCC8;
+}
+
+.tax-info {
+  margin-bottom: 12px;
+}
+
+.tax-info small {
+  font-size: 12px;
+  color: #6D4C3A;
+  font-style: italic;
+}
+
+.security-info {
+  display: flex;
+  justify-content: center;
+}
+
+.security-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #E8F5E8;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #2E7D32;
+  font-weight: 500;
+}
+
+.security-icon {
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .summary-header {
+    padding: 16px 20px;
+  }
+
+  .summary-header h3 {
+    font-size: 18px;
+  }
+
+  .edit-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .summary-items,
+  .summary-breakdown,
+  .summary-footer {
+    padding: 16px 20px;
+  }
+
+  .summary-item {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .item-total {
+    text-align: left;
+    align-self: flex-start;
+  }
+
+  .breakdown-row.total {
+    font-size: 16px;
+  }
+
+  .total-amount {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-header {
+    padding: 12px 16px;
+  }
+
+  .summary-header h3 {
+    font-size: 16px;
+  }
+
+  .summary-items,
+  .summary-breakdown,
+  .summary-footer {
+    padding: 12px 16px;
+  }
+
+  .item-info h4 {
+    font-size: 14px;
+  }
+
+  .item-details {
+    font-size: 12px;
+  }
+
+  .breakdown-row {
+    font-size: 12px;
+  }
+
+  .breakdown-row.total {
+    font-size: 14px;
+  }
+
+  .total-amount {
+    font-size: 16px;
+  }
+
+  .security-badge {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .order-summary {
+    background: #2C2C2C;
+    color: #FFFFFF;
+  }
+
+  .summary-header {
+    background: linear-gradient(135deg, #6B4A1F, #8B5A2B);
+  }
+
+  .summary-items {
+    border-bottom-color: #4A4A4A;
+  }
+
+  .summary-item {
+    border-bottom-color: #3A3A3A;
+  }
+
+  .item-info h4 {
+    color: #FFFFFF;
+  }
+
+  .item-details {
+    color: #B0B0B0;
+  }
+
+  .item-total {
+    color: #FFFFFF;
+  }
+
+  .summary-breakdown {
+    background: #1A1A1A;
+  }
+
+  .breakdown-row {
+    color: #B0B0B0;
+  }
+
+  .breakdown-row.total {
+    color: #FFFFFF;
+    border-top-color: #8B5A2B;
+  }
+
+  .summary-footer {
+    background: #1A1A1A;
+    border-top-color: #4A4A4A;
+  }
+
+  .tax-info small {
+    color: #B0B0B0;
+  }
+
+  .security-badge {
+    background: #1A3A1A;
+    color: #4CAF50;
+  }
+}
