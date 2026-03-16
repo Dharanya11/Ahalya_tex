@@ -11,12 +11,13 @@ export function CartProvider({ children }) {
 
   const loadLocalCart = () => {
     const savedCart = localStorage.getItem('cart');
-    if (!savedCart) return [];
+    if (!savedCart || savedCart === '') return [];
     try {
       const parsed = JSON.parse(savedCart);
       return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
       console.error('Error loading cart from localStorage:', error);
+      localStorage.removeItem('cart');
       return [];
     }
   };

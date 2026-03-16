@@ -9,9 +9,10 @@ export function AuthProvider({ children }) {
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser) {
+    if (savedUser && savedUser !== '') {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
       } catch (error) {
         console.error('Error loading user from localStorage:', error);
         localStorage.removeItem('user');

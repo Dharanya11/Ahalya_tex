@@ -17,9 +17,16 @@ export const addToRecentlyViewed = (product) => {
 export const getRecentlyViewed = () => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    if (!stored || stored === '') {
+      return [];
+    }
+    // Check if stored data is valid JSON
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
     console.error('Error loading recently viewed:', error);
+    // Clear corrupted data
+    localStorage.removeItem(STORAGE_KEY);
     return [];
   }
 };
