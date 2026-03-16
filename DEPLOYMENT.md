@@ -48,7 +48,7 @@ cd backend && node scripts/seedAdmin.js
 
 ### 2. Environment Variables (Vercel Dashboard)
 ```bash
-VITE_API_URL=https://ahalya-tex-backend.onrender.com
+VITE_API_URL=https://ahalya-tex-2.onrender.com
 ```
 
 ### 3. Vercel Settings
@@ -107,8 +107,8 @@ app.use(cors({
 
 After deployment:
 - **Frontend**: `https://ahalya-tex.vercel.app`
-- **Backend**: `https://ahalya-tex-backend.onrender.com`
-- **API Docs**: `https://ahalya-tex-backend.onrender.com/`
+- **Backend**: `https://ahalya-tex-2.onrender.com`
+- **API Docs**: `https://ahalya-tex-2.onrender.com/`
 
 ---
 
@@ -116,7 +116,7 @@ After deployment:
 
 ### 1. Backend Health Check
 ```bash
-curl https://ahalya-tex-backend.onrender.com/
+curl https://ahalya-tex-2.onrender.com/
 # Should return: "API is running..."
 ```
 

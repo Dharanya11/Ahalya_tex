@@ -1,7 +1,7 @@
 services:
   # Backend Service
   - type: web
-    name: ahalya-tex-backend
+    name: ahalya-tex-2
     env: node
     repo: https://github.com/Dharanya11/Ahalya_tex
     rootDir: backend
