@@ -2,7 +2,14 @@ import mongoose from 'mongoose';
 
 const wishlistItemSchema = mongoose.Schema(
   {
-    productId: { type: mongoose.Schema.Types.Mixed, required: true },
+    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    image: { type: String },
+    category: { type: String },
+    customizable: { type: Boolean, default: false },
+    customization: { type: mongoose.Schema.Types.Mixed },
     addedAt: { type: Date, default: Date.now },
   },
   { _id: false }

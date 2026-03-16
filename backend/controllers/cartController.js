@@ -24,7 +24,7 @@ const putCart = async (req, res) => {
   const sanitized = items.map((i) => ({
     itemKey: String(i.itemKey || i.id || ''),
     product: i.product || undefined,
-    productId: i.productId ? String(i.productId) : undefined,
+    productId: i.productId ? i.productId : undefined,
     name: i.name || 'Item',
     price: typeof i.price === 'number' ? i.price : Number(i.price || 0),
     image: i.image,

@@ -210,4 +210,52 @@ const registerUser = register;
 // Backward compatibility: /api/auth/signup -> /api/auth/register
 const signup = register;
 
-export { login, register, signup, logout, authUser, registerUser, getUsers, getUserById, updateUser, deleteUser, toggleUserBlock };
+// @desc    Update user profile
+// @route   PUT /api/auth/update-profile
+// @access  Private
+const updateProfile = async (req, res) => {
+  try {
+    const { name, email, phone, address, city, state, pincode } = req.body;
+    const userId = req.user._id;
+
+    // Find user and update profile
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          ...(name && { name }),
+          ...(email && { email }),
+          ...(phone && { phone }),
+          ...(address && { address }),
+          ...(city && { city }),
+          ...(state && { state }),
+          ...(pincode && { pincode })
+        }
+      },
+      { new: true, runValidators: false }
+    );
+
+    if (updatedUser) {
+      return res.json({
+        message: 'Profile updated successfully',
+        user: {
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          phone: updatedUser.phone,
+          address: updatedUser.address,
+          city: updatedUser.city,
+          state: updatedUser.state,
+          pincode: updatedUser.pincode
+        }
+      });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Server error. Please try again.' });
+  }
+};
+
+export { login, register, signup, logout, authUser, registerUser, getUsers, getUserById, updateUser, deleteUser, toggleUserBlock, updateProfile };

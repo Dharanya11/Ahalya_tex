@@ -23,10 +23,17 @@ const putWishlist = async (req, res) => {
 
   const sanitized = items
     .map((i) => ({
+      product: i.product ?? i.productId,
       productId: i.productId ?? i.product ?? i.id,
+      name: i.name || 'Item',
+      price: i.price || 0,
+      image: i.image,
+      category: i.category,
+      customizable: !!i.customizable,
+      customization: i.customization || {},
       addedAt: i.addedAt ? new Date(i.addedAt) : new Date(),
     }))
-    .filter((i) => i.productId !== undefined && i.productId !== null && String(i.productId).length > 0);
+    .filter((i) => i.productId && i.productId !== undefined && i.productId !== null && String(i.productId).length > 0);
 
   const updated = await Wishlist.findOneAndUpdate(
     { user: req.user._id },

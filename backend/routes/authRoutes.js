@@ -6,7 +6,7 @@
  */
 
 import express from 'express';
-import { register, signup, login, logout } from '../controllers/authController.js';
+import { register, signup, login, logout, updateProfile } from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -21,5 +21,8 @@ router.post('/login', login);
 
 // POST /api/auth/logout - clears cookie
 router.post('/logout', logout);
+
+// PUT /api/auth/update-profile - Update user profile
+router.put('/update-profile', updateProfile);
 
 export default router;
