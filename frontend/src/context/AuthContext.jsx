@@ -50,6 +50,11 @@ export function AuthProvider({ children }) {
         throw new Error(data.message || 'Signup failed');
       }
 
+      if (!data || !data._id) {
+        console.error('Invalid user data received:', data);
+        throw new Error('Invalid server response');
+      }
+
       setUser(data);
       return data;
     } catch (error) {
@@ -76,15 +81,15 @@ export function AuthProvider({ children }) {
       // Use safe JSON parsing utility
       const data = await safeParseResponseJSON(response, {});
       
-      if (!data || !data._id) {
-        console.error('Invalid user data received:', data);
-        throw new Error('Invalid server response');
-      }
-
       if (!response.ok) {
         const errorMessage = data?.message || `Login failed (${response.status})`;
         console.error('Login failed:', errorMessage);
         throw new Error(errorMessage);
+      }
+
+      if (!data || !data._id) {
+        console.error('Invalid user data received:', data);
+        throw new Error('Invalid server response');
       }
 
       console.log('Login successful, user data:', data);
