@@ -122,7 +122,8 @@ const DummyPayment = ({
   const saveOrderToLocalStorage = (orderData) => {
     try {
       // Get existing orders from localStorage
-      const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const savedOrders = localStorage.getItem('orders');
+      const existingOrders = savedOrders && savedOrders !== '' ? JSON.parse(savedOrders) : [];
       
       // Add new order with unique ID
       const newOrder = {

@@ -33,7 +33,8 @@ const OrdersPage = ({ user }) => {
       }
 
       // Fallback to localStorage
-      const localOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const savedOrders = localStorage.getItem('orders');
+      const localOrders = savedOrders && savedOrders !== '' ? JSON.parse(savedOrders) : [];
       const userOrders = user?.id 
         ? localOrders.filter(order => order.user.id === user.id)
         : localOrders;

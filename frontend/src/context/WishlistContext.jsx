@@ -46,7 +46,7 @@ export function WishlistProvider({ children }) {
       try {
         if (!isAuthenticated) {
           const savedWishlist = localStorage.getItem('wishlist');
-          if (savedWishlist) {
+          if (savedWishlist && savedWishlist !== '') {
             try {
               const parsed = JSON.parse(savedWishlist);
               if (isMounted) setWishlist(Array.isArray(parsed) ? parsed : []);

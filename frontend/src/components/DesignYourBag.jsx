@@ -152,7 +152,8 @@ export default function DesignYourBag() {
       savedAt: new Date().toISOString()
     };
     
-    const designs = JSON.parse(localStorage.getItem('savedBagDesigns') || '[]');
+    const savedDesigns = localStorage.getItem('savedBagDesigns');
+    const designs = savedDesigns && savedDesigns !== '' ? JSON.parse(savedDesigns) : [];
     designs.push(design);
     localStorage.setItem('savedBagDesigns', JSON.stringify(designs));
     setSavedDesigns(designs);
@@ -177,8 +178,15 @@ export default function DesignYourBag() {
   };
 
   useEffect(() => {
-    const designs = JSON.parse(localStorage.getItem('savedBagDesigns') || '[]');
-    setSavedDesigns(designs);
+    try {
+      const savedDesigns = localStorage.getItem('savedBagDesigns');
+      const designs = savedDesigns && savedDesigns !== '' ? JSON.parse(savedDesigns) : [];
+      setSavedDesigns(designs);
+    } catch (error) {
+      console.error('Error loading saved designs:', error);
+      localStorage.removeItem('savedBagDesigns');
+      setSavedDesigns([]);
+    }
   }, []);
 
   // Get font family from font style
