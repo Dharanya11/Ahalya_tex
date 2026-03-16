@@ -12,16 +12,9 @@ export const clearCart = () => {
 export const getCartItems = () => {
   try {
     const cartItems = localStorage.getItem('cart');
-    if (!cartItems || cartItems === '') {
-      return [];
-    }
-    // Check if stored data is valid JSON
-    const parsed = JSON.parse(cartItems);
-    return Array.isArray(parsed) ? parsed : [];
+    return cartItems ? JSON.parse(cartItems) : [];
   } catch (error) {
     console.error('Error getting cart items:', error);
-    // Clear corrupted data
-    localStorage.removeItem('cart');
     return [];
   }
 };

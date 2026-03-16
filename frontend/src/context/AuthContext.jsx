@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { safeParseResponseJSON } from '../utils/jsonUtils';
 
 const AuthContext = createContext();
 
@@ -10,10 +9,9 @@ export function AuthProvider({ children }) {
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('user');
-    if (savedUser && savedUser !== '') {
+    if (savedUser) {
       try {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
+        setUser(JSON.parse(savedUser));
       } catch (error) {
         console.error('Error loading user from localStorage:', error);
         localStorage.removeItem('user');
@@ -43,16 +41,10 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ name, email, password }),
       });
 
-      // Use safe JSON parsing utility
-      const data = await safeParseResponseJSON(response, {});
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || 'Signup failed');
-      }
-
-      if (!data || !data._id) {
-        console.error('Invalid user data received:', data);
-        throw new Error('Invalid server response');
       }
 
       setUser(data);
@@ -65,8 +57,6 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      console.log('Attempting login with:', email);
-      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -76,23 +66,12 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       });
 
-      console.log('Login response status:', response.status);
+      const data = await response.json();
 
-      // Use safe JSON parsing utility
-      const data = await safeParseResponseJSON(response, {});
-      
       if (!response.ok) {
-        const errorMessage = data?.message || `Login failed (${response.status})`;
-        console.error('Login failed:', errorMessage);
-        throw new Error(errorMessage);
+        throw new Error(data.message || 'Login failed');
       }
 
-      if (!data || !data._id) {
-        console.error('Invalid user data received:', data);
-        throw new Error('Invalid server response');
-      }
-
-      console.log('Login successful, user data:', data);
       setUser(data);
       return data;
     } catch (error) {
