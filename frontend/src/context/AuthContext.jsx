@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
   const signup = async (name, email, password, adminSecret) => {
     try {
       // Normal user register
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +41,13 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        throw new Error('Server response is not valid JSON');
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Signup failed');
@@ -57,7 +63,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +72,13 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('JSON parse error:', jsonError);
+        throw new Error('Server response is not valid JSON');
+      }
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -82,7 +94,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     // Clear server cookie (best effort); then clear local state.
-    fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+    fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     setUser(null);
   };
 
