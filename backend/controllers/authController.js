@@ -68,7 +68,8 @@ const login = async (req, res) => {
       token, // kept for compatibility; prefer cookie-based auth
     });
   } catch (error) {
-    res.status(500).json({ message: error.message || 'Server error' });
+    console.error('Login error:', error);
+    res.status(500).json({ message: error.message || 'Server error during login' });
   }
 };
 
@@ -94,7 +95,7 @@ const register = async (req, res) => {
       name,
       email: normalizedEmail,
       password,
-      // role/isAdmin are enforced by the User model single-admin rule
+      // role/isAdmin are enforced by User model single-admin rule
     });
 
     if (user) {
@@ -111,7 +112,8 @@ const register = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Registration error:', error);
+    res.status(500).json({ message: error.message || 'Server error during registration' });
   }
 };
 
