@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     // Clear server cookie (best effort); then clear local state.
-    fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
+    await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     setUser(null);
   };
 

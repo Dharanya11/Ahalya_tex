@@ -44,7 +44,7 @@ export function CartProvider({ children }) {
         }
 
         const localItems = loadLocalCart();
-        const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/cart`, { headers: authHeaders() });
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/cart`, { headers: authHeaders() });
         const data = await res.json().catch(() => ({ items: [] }));
         const dbItems = Array.isArray(data?.items) ? data.items : [];
         const normalizedDb = dbItems.map((i) => ({
@@ -60,7 +60,7 @@ export function CartProvider({ children }) {
         }));
 
         if (normalizedDb.length === 0 && localItems.length > 0) {
-          await fetch(`${import.meta.env.VITE_API_URL || ''}/api/cart`, {
+          await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/cart`, {
             method: 'PUT',
             headers: authHeaders(),
             body: JSON.stringify({
@@ -108,7 +108,7 @@ export function CartProvider({ children }) {
 
     const persist = async () => {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL || ''}/api/cart`, {
+        await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/cart`, {
           method: 'PUT',
           headers: authHeaders(),
           body: JSON.stringify({
@@ -203,7 +203,7 @@ export function CartProvider({ children }) {
     setCartItems([]);
     localStorage.removeItem('cart');
     if (user?.token) {
-      fetch(`${import.meta.env.VITE_API_URL || ''}/api/cart`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
+      fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/cart`, { method: 'DELETE', headers: authHeaders() }).catch(() => {});
     }
   };
 

@@ -61,7 +61,7 @@ export function WishlistProvider({ children }) {
           return;
         }
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/wishlist`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/wishlist`, {
           method: 'GET',
           credentials: 'include',
           headers: {
