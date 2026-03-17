@@ -347,7 +347,7 @@ export default function Checkout() {
       };
 
       // Send order to backend
-      const response = await fetch('/api/orders', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -361,7 +361,10 @@ export default function Checkout() {
         console.log('Order placed successfully:', order);
         return order;
       } else {
-        throw new Error('Failed to place order');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.message || `Failed to place order (Status: ${response.status})`;
+        console.error('Order placement failed:', errorMessage);
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error('Error placing order:', error);
@@ -615,12 +618,12 @@ export default function Checkout() {
         totalPrice: total,
       };
 
-      const response = await fetch('/api/orders', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify(orderData),
       });
@@ -658,23 +661,24 @@ export default function Checkout() {
       console.log('Razorpay SDK loaded, creating order...');
       
       // 3. Create Razorpay Order (Server side)
-      const paymentResponse = await fetch('/api/payment/create-order', {
+      const payload = {
+        amount: total,
+        currency: 'INR',
+        receipt: orderId || 'receipt_' + Date.now(),
+        notes: {
+          order_id: orderId,
+          customer_name: formData.fullName,
+          customer_email: formData.email
+        }
+      };
+      const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/payment/create-order`, {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user.token}`,
+          Authorization: `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ 
-          amount: total,
-          currency: 'INR',
-          receipt: orderId || 'receipt_' + Date.now(),
-          notes: {
-            order_id: orderId,
-            customer_name: formData.fullName,
-            customer_email: formData.email
-          }
-        }),
+        body: JSON.stringify(payload),
       });
 
       console.log('Payment order response status:', paymentResponse.status);
@@ -691,7 +695,7 @@ export default function Checkout() {
       // 4. Get Razorpay Key ID
       let razorpayKey;
       try {
-        const keyResponse = await fetch('/api/config/razorpay');
+        const keyResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/config/razorpay`);
         if (!keyResponse.ok) {
           console.warn('Failed to get Razorpay key from server, using fallback');
           razorpayKey = 'rzp_test_1DP5mmOlF5G5ag'; // Test key fallback
@@ -719,25 +723,6 @@ export default function Checkout() {
         name: 'Shri Ahalya Tex',
         description: `Order Payment - ${orderId?.slice(-8).toUpperCase()}`,
         order_id: paymentData.id,
-        handler: async function (response) {
-          try {
-            console.log('Payment successful, verifying...', response);
-            
-            // 6. Verify Payment
-            const verifyResponse = await fetch('/api/payment/verify-payment', {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                orderId: createdOrder._id,
-              }),
-            });
 
             const verifyData = await verifyResponse.json();
             console.log('Payment verification response:', verifyData);
