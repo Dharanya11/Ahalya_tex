@@ -29,36 +29,66 @@ const login = async (req, res) => {
   password = password?.trim();
 
   try {
+    console.log('Login attempt:', { email, password: '***' });
+    
     if (!email || !password) {
+      console.log('Missing email or password');
       return res.status(400).json({ message: 'Email and password are required' });
     }
+    
     if (!isValidEmail(email)) {
+      console.log('Invalid email format:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
+    console.log('Checking user in database for email:', email);
+    
     // Check MongoDB users (admins are stored here too)
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user) {
+      console.log('User not found in database');
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    console.log('User found:', { 
+      id: user._id, 
+      email: user.email, 
+      role: user.role, 
+      isBlocked: user.isBlocked 
+    });
 
     if (user.isBlocked && user.role !== 'admin') {
+      console.log('User is blocked');
       return res.status(403).json({ message: 'Your account has been blocked by admin.' });
     }
 
+    console.log('Comparing password...');
     // Verify password (bcrypt)
     const isPasswordMatch = await user.matchPassword(password);
-    if (!isPasswordMatch) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!isPasswordMatch) {
+      console.log('Password mismatch');
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
+    console.log('Password matched, checking admin rules...');
     // Enforce your single-login rules by email
     const isAdminLogin = email === ADMIN_EMAIL;
+    console.log('Is admin login:', isAdminLogin, 'User role:', user.role);
+    
     if (isAdminLogin && user.role !== 'admin') {
+      console.log('Admin login but user role is not admin');
       return res.status(403).json({ message: 'Admin account is not configured correctly.' });
     }
+    
     if (!isAdminLogin && user.role !== 'user') {
+      console.log('Regular login but user role is not user');
       return res.status(403).json({ message: 'Access denied.' });
     }
 
+    console.log('Generating token...');
     const token = generateToken(res, user._id, user.role);
-    return res.json({
+    
+    const responseData = {
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -66,10 +96,17 @@ const login = async (req, res) => {
       isAdmin: user.role === 'admin',
       isBlocked: user.isBlocked,
       token, // kept for compatibility; prefer cookie-based auth
-    });
+    };
+    
+    console.log('Login successful, returning:', responseData);
+    return res.json(responseData);
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: error.message || 'Server error during login' });
+    console.error('Error stack:', error.stack);
+    res.status(500).json({ 
+      message: 'Server error during login',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
