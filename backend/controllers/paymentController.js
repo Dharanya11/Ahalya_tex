@@ -9,8 +9,32 @@ const createRazorpayOrder = async (req, res) => {
   try {
     const { amount } = req.body;
 
+    // Check if auto-payment mode is enabled (for testing)
+    if (process.env.AUTO_PAYMENT_MODE === 'true') {
+      console.log('Auto-payment mode enabled - creating dummy order');
+      
+      // Create a dummy order response for auto-payment
+      const dummyOrder = {
+        id: `order_auto_${Date.now()}`,
+        entity: 'order',
+        amount: amount * 100,
+        amount_paid: 0,
+        amount_due: amount * 100,
+        currency: 'INR',
+        receipt: `receipt_auto_${Date.now()}`,
+        offer_id: null,
+        status: 'created',
+        attempts: 0,
+        notes: [],
+        created_at: Math.floor(Date.now() / 1000),
+      };
+      
+      return res.status(200).json(dummyOrder);
+    }
+
     // Check if Razorpay credentials are configured
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET || 
+        process.env.RAZORPAY_KEY_SECRET === 'your_razorpay_secret_key_here') {
       return res.status(500).json({ 
         message: 'Payment gateway not configured. Please contact administrator.' 
       });
@@ -58,8 +82,38 @@ const verifyPayment = async (req, res) => {
       orderId // The database Order ID
     } = req.body;
 
+    // Check if auto-payment mode is enabled (for testing)
+    if (process.env.AUTO_PAYMENT_MODE === 'true') {
+      console.log('Auto-payment mode enabled - verifying payment automatically');
+      
+      // Auto-verify payment in test mode
+      try {
+        const order = await Order.findById(orderId);
+        if (order) {
+          order.isPaid = true;
+          order.paidAt = new Date();
+          order.paymentResult = {
+            id: `auto_payment_${Date.now()}`,
+            status: 'completed',
+            update_time: new Date().toISOString(),
+            email_address: req.user?.email || 'customer@example.com',
+          };
+          await order.save();
+          
+          return res.status(200).json({
+            success: true,
+            message: 'Payment verified successfully (auto-mode)',
+            order: order
+          });
+        }
+      } catch (error) {
+        console.error('Auto-payment verification error:', error);
+        return res.status(500).json({ message: 'Auto-payment verification failed' });
+      }
+    }
+
     // Check if Razorpay credentials are configured
-    if (!process.env.RAZORPAY_KEY_SECRET) {
+    if (!process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET === 'your_razorpay_secret_key_here') {
       return res.status(500).json({ 
         message: 'Payment gateway not configured. Please contact administrator.' 
       });
