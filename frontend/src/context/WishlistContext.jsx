@@ -61,7 +61,7 @@ export function WishlistProvider({ children }) {
           return;
         }
 
-        const res = await fetch('/api/wishlist', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/wishlist`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -96,7 +96,7 @@ export function WishlistProvider({ children }) {
     }
 
     const controller = new AbortController();
-    fetch('/api/wishlist', {
+    fetch(`${import.meta.env.VITE_API_URL || ''}/api/wishlist`, {
       method: 'PUT',
       credentials: 'include',
       headers: {
@@ -131,7 +131,7 @@ export function WishlistProvider({ children }) {
   const clearWishlist = () => {
     setWishlist([]);
     if (isAuthenticated) {
-      fetch('/api/wishlist', {
+      fetch(`${import.meta.env.VITE_API_URL || ''}/api/wishlist`, {
         method: 'DELETE',
         credentials: 'include',
         headers: {

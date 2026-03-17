@@ -22,7 +22,7 @@ const generateToken = (res, userId, role) => {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none', // Changed from 'lax' to 'none' for cross-origin
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
   }
