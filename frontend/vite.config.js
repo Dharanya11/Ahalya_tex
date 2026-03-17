@@ -15,6 +15,9 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    mimeTypes: {
+      'application/javascript': ['js', 'jsx'],
+    },
   },
   build: {
     outDir: 'dist',

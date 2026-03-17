@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
-  const signup = async (name, email, password, adminSecret) => {
+  const signup = async (name, email, password) => {
     try {
       // Normal user register
       const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/auth/register`, {
@@ -92,7 +92,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     // Clear server cookie (best effort); then clear local state.
     await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     setUser(null);
@@ -108,12 +108,4 @@ export function AuthProvider({ children }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }

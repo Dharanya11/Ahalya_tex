@@ -62,7 +62,7 @@ export class RazorpayService {
    */
   async getRazorpayKey() {
     try {
-      const response = await fetch('/api/config/razorpay');
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/config/razorpay`);
       
       if (response.ok) {
         const key = await response.text();
@@ -112,7 +112,7 @@ export class RazorpayService {
         headers['Authorization'] = `Bearer ${userToken}`;
       }
 
-      const response = await fetch('/api/payment/create-order', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/payment/create-order`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(payload)
@@ -306,7 +306,7 @@ export class RazorpayService {
         },
         timeout: {
           method: 'post',
-          url: '/api/payment/timeout'
+          url: `${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/payment/timeout`
         }
       };
 
@@ -352,7 +352,7 @@ export class RazorpayService {
    */
   async verifyPayment(paymentData, userToken) {
     try {
-      const response = await fetch('/api/payment/verify-payment', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/payment/verify-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

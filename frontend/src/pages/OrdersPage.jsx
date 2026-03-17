@@ -18,7 +18,7 @@ const OrdersPage = ({ user }) => {
       
       // Try to fetch from backend API first
       if (user?.token) {
-        const response = await fetch('/api/orders/myorders', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/orders/myorders`, {
           headers: {
             'Authorization': `Bearer ${user.token}`,
           },

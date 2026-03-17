@@ -77,7 +77,7 @@ export default function Checkout() {
     setSelectedPaymentMethod(method);
     setPaymentError('');
     setPaymentResult(null);
-    
+
     // Update form data for compatibility
     setFormData(prev => ({
       ...prev,
@@ -88,7 +88,7 @@ export default function Checkout() {
   const handlePayNow = async (paymentMethod) => {
     try {
       console.log('Pay Now clicked with method:', paymentMethod);
-      
+
       // Validate form
       if (!validateForm()) {
         console.log('Form validation failed');
@@ -134,12 +134,12 @@ export default function Checkout() {
   const handleDummyPayment = async (paymentMethod, orderId) => {
     try {
       console.log(`=== DUMMY PAYMENT START - ${paymentMethod} ===`);
-      
+
       // Show dummy payment modal
       setShowDummyPayment(true);
       setDummyPaymentMethod(paymentMethod);
       setDummyOrderId(orderId);
-      
+
     } catch (error) {
       console.error('Dummy payment error:', error);
       setPaymentError('Failed to open payment form. Please try again.');
@@ -160,9 +160,9 @@ export default function Checkout() {
 
       // Place order in backend immediately
       await placeOrderInBackend(dummyOrderId);
-      
+
       console.log('Order placed successfully, updating UI...');
-      
+
       // Update UI with success
       setPaymentStatus('completed');
       setPaymentConfirmed(true);
@@ -205,7 +205,7 @@ export default function Checkout() {
       console.log('Starting QR payment process...');
       console.log('Order ID:', orderId);
       console.log('Customer Info:', customerInfo);
-      
+
       // Generate QR code
       const transactionId = `TXN${Date.now()}${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       setTransactionId(transactionId);
@@ -215,7 +215,7 @@ export default function Checkout() {
       const upiId = 'ahalyatexile@upi'; // Business UPI ID
       const merchantName = 'Shri Ahalya Tex';
       const transactionNote = `Order Payment - ${orderId}`;
-      
+
       // Create proper UPI URL
       const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${total}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${transactionId}`;
       console.log('UPI URL:', upiUrl);
@@ -232,23 +232,23 @@ export default function Checkout() {
           },
           errorCorrectionLevel: 'M'
         });
-        
+
         console.log('QR code generated successfully');
         console.log('QR code URL length:', qrCodeDataUrl.length);
         console.log('QR code URL starts with:', qrCodeDataUrl.substring(0, 50));
-        
+
         setQrCodeUrl(qrCodeDataUrl);
         console.log('setQrCodeUrl called');
-        
+
         setShowQRCode(true);
         console.log('setShowQRCode called - modal should show');
         setPaymentStatus('pending');
         console.log('setPaymentStatus called');
-        
+
         // Start payment monitoring
         startPaymentMonitoring(transactionId);
         console.log('Payment monitoring started');
-        
+
       } catch (qrError) {
         console.error('QR code generation failed:', qrError);
         throw new Error('Failed to generate QR code. Please try again.');
@@ -263,20 +263,20 @@ export default function Checkout() {
   const startPaymentMonitoring = (txnId) => {
     // Auto-success after exactly 10 seconds
     console.log('Starting 10-second countdown for QR payment...');
-    
+
     setTimeout(async () => {
       try {
         console.log('10 seconds completed - placing order automatically');
-        
+
         // Prevent multiple order placements
         if (orderPlaced) {
           console.log('Order already placed, skipping...');
           return;
         }
-        
+
         // Place the order in backend first
         await placeOrderInBackend(txnId);
-        
+
         // Then update UI with success
         setPaymentStatus('completed');
         setPaymentConfirmed(true);
@@ -300,7 +300,7 @@ export default function Checkout() {
           clearCart();
           navigate('/my-orders');
         }, 3000);
-        
+
       } catch (error) {
         console.error('Error placing order:', error);
         setPaymentStatus('failed');
@@ -312,7 +312,7 @@ export default function Checkout() {
   const placeOrderInBackend = async (transactionId) => {
     try {
       console.log('Placing order in backend with transaction ID:', transactionId);
-      
+
       // Create order data
       const orderData = {
         orderItems: effectiveItems.map((item) => ({
@@ -347,7 +347,7 @@ export default function Checkout() {
       };
 
       // Send order to backend
-      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -401,9 +401,9 @@ export default function Checkout() {
 
       // Place the order in backend immediately
       await placeOrderInBackend(transactionId);
-      
+
       console.log('Order placed successfully, updating UI...');
-      
+
       // Update UI with success
       setPaymentStatus('completed');
       setPaymentConfirmed(true);
@@ -439,7 +439,7 @@ export default function Checkout() {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Simplified validation for testing - only check essential fields
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required';
@@ -455,12 +455,12 @@ export default function Checkout() {
     } else {
       // Remove all non-digits and handle leading 0
       const cleanPhone = formData.phone.replace(/\D/g, '');
-      
+
       // Handle Indian phone numbers: 
       // - With leading 0: 07010544176 -> 7010544176 (10 digits)
       // - Without leading 0: 7010544176 (10 digits)
       // - With country code: +917010544176 -> 917010544176 (12 digits)
-      
+
       let finalPhone = cleanPhone;
       if (cleanPhone.startsWith('0') && cleanPhone.length === 11) {
         // Remove leading 0 for numbers like 07010544176
@@ -469,13 +469,13 @@ export default function Checkout() {
         // Keep country code for numbers like 917010544176
         finalPhone = cleanPhone;
       }
-      
+
       // Validate final phone number (10 digits for Indian numbers without country code, or 12 with country code)
       if (!/^\d{10}$/.test(finalPhone) && !/^\d{12}$/.test(finalPhone)) {
         newErrors.phone = 'Phone must be 10 digits (or 12 with country code)';
       }
     }
-    
+
     // For testing, allow empty address fields
     // if (!formData.address.trim()) newErrors.address = 'Address is required';
     // if (!formData.city.trim()) newErrors.city = 'City is required';
@@ -495,7 +495,7 @@ export default function Checkout() {
         resolve(true);
         return;
       }
-      
+
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
@@ -519,18 +519,18 @@ export default function Checkout() {
   const generateQRCode = async () => {
     try {
       setProcessingPayment(true);
-      
+
       // Generate unique transaction ID
       const transactionId = 'TXN' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
       setTransactionId(transactionId);
-      
+
       const upiId = 'ahalyatexile@upi'; // Business UPI ID
       const merchantName = 'Ahalya Texile';
       const transactionNote = `Order Payment - ${orderId || 'ORD' + Date.now()}`;
-      
+
       // Create UPI payment URL with more parameters for better tracking
       const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${total}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${transactionId}&mc=5221`; // mc=5221 for retail
-      
+
       // Generate QR Code with better styling
       const qrCodeDataUrl = await QRCode.toDataURL(upiUrl, {
         width: 256,
@@ -541,13 +541,13 @@ export default function Checkout() {
         },
         errorCorrectionLevel: 'M' // Medium error correction for better scanning
       });
-      
+
       setQrCodeUrl(qrCodeDataUrl);
       setShowQRCode(true);
-      
+
       // Start payment timeout monitoring
       startPaymentMonitoring(transactionId);
-      
+
     } catch (error) {
       console.error('Error generating QR code:', error);
       setPaymentError('Failed to generate QR code. Please try again.');
@@ -618,7 +618,7 @@ export default function Checkout() {
         totalPrice: total,
       };
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/orders`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/orders`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -659,7 +659,7 @@ export default function Checkout() {
       }
 
       console.log('Razorpay SDK loaded, creating order...');
-      
+
       // 3. Create Razorpay Order (Server side)
       const payload = {
         amount: total,
@@ -671,7 +671,7 @@ export default function Checkout() {
           customer_email: formData.email
         }
       };
-      const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/payment/create-order`, {
+      const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/payment/create-order`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -695,7 +695,7 @@ export default function Checkout() {
       // 4. Get Razorpay Key ID
       let razorpayKey;
       try {
-        const keyResponse = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/config/razorpay`);
+        const keyResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com'}/api/config/razorpay`);
         if (!keyResponse.ok) {
           console.warn('Failed to get Razorpay key from server, using fallback');
           razorpayKey = 'rzp_test_1DP5mmOlF5G5ag'; // Test key fallback
@@ -723,24 +723,6 @@ export default function Checkout() {
         name: 'Shri Ahalya Tex',
         description: `Order Payment - ${orderId?.slice(-8).toUpperCase()}`,
         order_id: paymentData.id,
-
-            const verifyData = await verifyResponse.json();
-            console.log('Payment verification response:', verifyData);
-
-            if (verifyResponse.ok) {
-              setOrderId(createdOrder._id);
-              clearCart();
-              setOrderPlaced(true);
-              navigate(`/orders/${createdOrder._id}`);
-            } else {
-              console.error('Payment verification failed:', verifyData);
-              throw new Error(verifyData.message || 'Payment verification failed');
-            }
-          } catch (error) {
-            console.error('Payment verification error:', error);
-            alert(`Payment verification failed: ${error.message || 'Unknown error'}. Please contact support with your order ID: ${orderId?.slice(-8).toUpperCase()}`);
-          }
-        },
         modal: {
           ondismiss: function() {
             console.log('Payment modal dismissed by user');
@@ -754,84 +736,28 @@ export default function Checkout() {
         prefill: {
           name: formData.fullName,
           email: formData.email,
-          contact: formData.phone,
+          contact: formData.phone
         },
         notes: {
-          order_id: orderId,
-          customer_name: formData.fullName,
-          customer_email: formData.email,
-          customer_phone: formData.phone
-        },
-        theme: {
-          color: '#8B5A2B', // Match brand color
-        },
-        retry: {
-          enabled: true,
-          max_count: 3
-        },
-        timeout: {
-          method: 'post', // HTTP method
-          url: '/api/payment/timeout' // API endpoint
+          order_id: orderId
         }
       };
 
-      console.log('Creating Razorpay instance...');
-      const paymentObject = new window.Razorpay(options);
-      
-      // Add event listeners for better error handling
-      paymentObject.on('payment.failed', function (response) {
-        console.error('Payment failed:', response);
-        const errorDescription = response.error.description;
-        const errorCode = response.error.code;
-        
-        let errorMessage = 'Payment failed. ';
-        if (errorCode === 'BAD_REQUEST_ERROR') {
-          errorMessage += 'Invalid payment request. Please try again.';
-        } else if (errorCode === 'NETWORK_ERROR') {
-          errorMessage += 'Network error. Please check your connection and try again.';
-        } else if (errorCode === 'TIMEOUT') {
-          errorMessage += 'Payment timed out. Please try again.';
-        } else {
-          errorMessage += errorDescription || 'Please try again or use QR code payment.';
-        }
-        
-        alert(errorMessage);
-      });
+      const verifyData = await verifyResponse.json();
+      console.log('Payment verification response:', verifyData);
 
-      paymentObject.on('payment.success', function (response) {
-        console.log('Payment success event:', response);
-      });
-
-      console.log('Opening Razorpay modal...');
-      paymentObject.open();
-    } catch (error) {
-      console.error('Order/Payment error:', error);
-      
-      // Enhanced error handling with specific messages
-      let errorMessage = 'An error occurred while processing your payment. ';
-      
-      if (error.message.includes('Payment gateway')) {
-        errorMessage += 'The payment gateway is currently unavailable. ';
-        errorMessage += 'Please try QR code payment option or contact support.';
-      } else if (error.message.includes('network') || error.message.includes('Network')) {
-        errorMessage += 'Please check your internet connection and try again.';
-      } else if (error.message.includes('timeout')) {
-        errorMessage += 'The request timed out. Please try again.';
-      } else if (error.message.includes('Failed to create payment order')) {
-        errorMessage += 'Unable to create payment order. Please try again or use QR code payment.';
-      } else if (error.message) {
-        errorMessage += error.message;
+      if (verifyResponse.ok) {
+        setOrderId(createdOrder._id);
+        clearCart();
+        setOrderPlaced(true);
+        navigate(`/orders/${createdOrder._id}`);
       } else {
-        errorMessage += 'Please try again or contact support if the problem persists.';
+        console.error('Payment verification failed:', verifyData);
+        throw new Error(verifyData.message || 'Payment verification failed');
       }
-      
-      // Show error with option to try QR payment
-      const shouldSuggestQR = formData.paymentMethod !== 'qr_upi';
-      const fullMessage = shouldSuggestQR 
-        ? `${errorMessage}\n\nAlternatively, you can try the QR Code Payment option for instant UPI payment.`
-        : errorMessage;
-      
-      alert(fullMessage);
+    } catch (error) {
+      console.error('Payment verification error:', error);
+      alert(`Payment verification failed: ${error.message || 'Unknown error'}. Please contact support with your order ID: ${orderId?.slice(-8).toUpperCase()}`);
     } finally {
       setIsProcessingPayment(false);
     }
@@ -869,8 +795,8 @@ export default function Checkout() {
               <p>{formData.city}, {formData.state} - {formData.pincode}</p>
               <p><strong>Payment Method:</strong> {
                 formData.paymentMethod === 'card' ? 'Credit/Debit Card' :
-                formData.paymentMethod === 'upi' ? 'UPI' :
-                'Net Banking'
+                  formData.paymentMethod === 'upi' ? 'UPI' :
+                    'Net Banking'
               }</p>
             </div>
             <button className="shop-now-btn" onClick={() => navigate('/')}>
@@ -884,7 +810,6 @@ export default function Checkout() {
             </button>
           </div>
         </div>
-        <Footer />
       </>
     );
   }
@@ -913,7 +838,7 @@ export default function Checkout() {
           </div>
           <h1 className="checkout-title">Secure Checkout</h1>
           <div className="checkout-subtitle">Your payment is processed securely. We never store card details.</div>
-          
+
           <div className="checkout-content">
             <div className="checkout-form-section">
               <h2>Shipping Address</h2>
@@ -1043,7 +968,7 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                </form>
+              </form>
             </div>
 
             <div className="checkout-summary">
@@ -1088,366 +1013,367 @@ export default function Checkout() {
           </div>
         </div>
       </div>
+    </div>
 
-      {/* Payment Result Display */}
-      {paymentResult && (
-        <div className={`payment-result ${paymentResult.success ? 'success' : 'error'}`}>
-          <div className="result-icon">
-            {paymentResult.success ? '✅' : '❌'}
-          </div>
-          <div className="result-message">
-            <h3>{paymentResult.success ? 'Payment Successful!' : 'Payment Failed'}</h3>
-            <p>{paymentResult.message}</p>
-            {paymentResult.success && (
-              <div className="result-details">
-                <p><strong>Order ID:</strong> #{paymentResult.orderId?.slice(-8).toUpperCase()}</p>
-                <p><strong>Payment ID:</strong> {paymentResult.paymentId}</p>
-                <p><strong>Amount:</strong> ₹{total.toLocaleString('en-IN')}</p>
-              </div>
-            )}
-          </div>
+    {/* Payment Result Display */}
+    {paymentResult && (
+      <div className={`payment-result ${paymentResult.success ? 'success' : 'error'}`}>
+        <div className="result-icon">
+          {paymentResult.success ? '✅' : '❌'}
+        </div>
+        <div className="result-message">
+          <h3>{paymentResult.success ? 'Payment Successful!' : 'Payment Failed'}</h3>
+          <p>{paymentResult.message}</p>
           {paymentResult.success && (
-            <div className="result-actions">
-              <button className="btn btn-primary" onClick={() => navigate('/orders')}>
-                View Orders
-              </button>
-              <button className="btn btn-secondary" onClick={() => navigate('/')}>
-                Continue Shopping
-              </button>
+            <div className="result-details">
+              <p><strong>Order ID:</strong> #{paymentResult.orderId?.slice(-8).toUpperCase()}</p>
+              <p><strong>Payment ID:</strong> {paymentResult.paymentId}</p>
+              <p><strong>Amount:</strong> ₹{total.toLocaleString('en-IN')}</p>
             </div>
           )}
         </div>
-      )}
+        {paymentResult.success && (
+          <div className="result-actions">
+            <button className="btn btn-primary" onClick={() => navigate('/orders')}>
+              View Orders
+            </button>
+            <button className="btn btn-secondary" onClick={() => navigate('/')}>
+              Continue Shopping
+            </button>
+          </div>
+        )}
+      </div>
+    )}
 
-      {/* QR Code Payment Modal */}
-      {showQRCode && (
-        <div className="qr-payment-overlay">
-          <div className="qr-payment-modal">
-            <div className="qr-payment-header">
-              <div className="qr-header-content">
-                <div className="qr-header-icon">📱</div>
-                <div>
-                  <h2>Secure UPI Payment</h2>
-                  <p className="qr-header-subtitle">Scan QR code to complete payment</p>
-                </div>
+    {/* QR Code Payment Modal */}
+    {showQRCode && (
+      <div className="qr-payment-overlay">
+        <div className="qr-payment-modal">
+          <div className="qr-payment-header">
+            <div className="qr-header-content">
+              <div className="qr-header-icon">📱</div>
+              <div>
+                <h2>Secure UPI Payment</h2>
+                <p className="qr-header-subtitle">Scan QR code to complete payment</p>
               </div>
-              <button 
-                className="close-qr-modal"
-                onClick={cancelPayment}
-                disabled={processingPayment}
-              >
-                ×
-              </button>
             </div>
-            
-            <div className="qr-payment-content">
-              {/* Payment Status */}
-              <div className={`payment-status-indicator ${paymentStatus}`}>
-                <div className="status-icon">
-                  {paymentStatus === 'pending' && '⏳'}
-                  {paymentStatus === 'processing' && '⚡'}
-                  {paymentStatus === 'completed' && '✅'}
-                  {paymentStatus === 'failed' && '❌'}
-                </div>
-                <div className="status-text">
-                  {paymentStatus === 'pending' && 'Waiting for payment...'}
-                  {paymentStatus === 'processing' && 'Processing payment...'}
-                  {paymentStatus === 'completed' && 'Payment successful!'}
-                  {paymentStatus === 'failed' && 'Payment failed'}
-                </div>
-              </div>
+            <button
+              className="close-qr-modal"
+              onClick={cancelPayment}
+              disabled={processingPayment}
+            >
+              ×
+            </button>
+          </div>
 
-              {/* Order and Transaction Details */}
-              <div className="payment-details">
-                <div className="detail-row">
-                  <span className="detail-label">Order ID:</span>
-                  <span className="detail-value">#{orderId?.slice(-8).toUpperCase()}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">Transaction ID:</span>
-                  <span className="detail-value">{transactionId}</span>
-                </div>
-                <div className="detail-row amount-row">
-                  <span className="detail-label">Amount:</span>
-                  <span className="detail-value amount">₹{total.toLocaleString('en-IN')}</span>
-                </div>
+          <div className="qr-payment-content">
+            {/* Payment Status */}
+            <div className={`payment-status-indicator ${paymentStatus}`}>
+              <div className="status-icon">
+                {paymentStatus === 'pending' && '⏳'}
+                {paymentStatus === 'processing' && '⚡'}
+                {paymentStatus === 'completed' && '✅'}
+                {paymentStatus === 'failed' && '❌'}
               </div>
-              
-              {/* QR Code Section */}
-              <div className="qr-code-section">
-                <div className="qr-code-container">
-                  {qrCodeUrl && !paymentConfirmed ? (
-                    <>
-                      <img src={qrCodeUrl} alt="Payment QR Code" className="qr-code-image" />
-                      <div className="qr-scanning-indicator">
-                        <div className="scanning-line"></div>
-                      </div>
-                    </>
-                  ) : paymentConfirmed ? (
-                    <div className="payment-success-animation">
-                      <div className="success-checkmark">✓</div>
+              <div className="status-text">
+                {paymentStatus === 'pending' && 'Waiting for payment...'}
+                {paymentStatus === 'processing' && 'Processing payment...'}
+                {paymentStatus === 'completed' && 'Payment successful!'}
+                {paymentStatus === 'failed' && 'Payment failed'}
+              </div>
+            </div>
+
+            {/* Order and Transaction Details */}
+            <div className="payment-details">
+              <div className="detail-row">
+                <span className="detail-label">Order ID:</span>
+                <span className="detail-value">#{orderId?.slice(-8).toUpperCase()}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Transaction ID:</span>
+                <span className="detail-value">{transactionId}</span>
+              </div>
+              <div className="detail-row amount-row">
+                <span className="detail-label">Amount:</span>
+                <span className="detail-value amount">₹{total.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* QR Code Section */}
+            <div className="qr-code-section">
+              <div className="qr-code-container">
+                {qrCodeUrl && !paymentConfirmed ? (
+                  <>
+                    <img src={qrCodeUrl} alt="Payment QR Code" className="qr-code-image" />
+                    <div className="qr-scanning-indicator">
+                      <div className="scanning-line"></div>
                     </div>
-                  ) : (
-                    <div className="qr-loading">
-                      <div className="loading-spinner"></div>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Debug Info */}
-                <div style={{ fontSize: '10px', color: '#666', marginTop: '10px', textAlign: 'center' }}>
-                  DEBUG: showQRCode={showQRCode.toString()}, qrCodeUrl exists={!!qrCodeUrl}, paymentConfirmed={paymentConfirmed.toString()}
-                </div>
-                
-                {/* Timer */}
-                {paymentStatus === 'pending' && (
-                  <div className="payment-timer">
-                    <p>Order will be placed automatically in: <span className="timer-text">10 seconds</span></p>
-                    <div className="timer-progress">
-                      <div className="timer-bar"></div>
-                    </div>
+                  </>
+                ) : paymentConfirmed ? (
+                  <div className="payment-success-animation">
+                    <div className="success-checkmark">✓</div>
+                  </div>
+                ) : (
+                  <div className="qr-loading">
+                    <div className="loading-spinner"></div>
                   </div>
                 )}
               </div>
-              
-              {/* Payment Instructions */}
-              <div className="payment-instructions">
-                <h3>How to Pay:</h3>
-                <div className="instructions-list">
-                  <div className="instruction-step">
-                    <span className="step-number">1</span>
-                    <span className="step-text">Open any UPI app (PhonePe, GPay, Paytm, etc.)</span>
-                  </div>
-                  <div className="instruction-step">
-                    <span className="step-number">2</span>
-                    <span className="step-text">Scan the QR code above</span>
-                  </div>
-                  <div className="instruction-step">
-                    <span className="step-number">3</span>
-                    <span className="step-text">Verify the amount (₹{total.toLocaleString('en-IN')}) and pay</span>
-                  </div>
-                  <div className="instruction-step">
-                    <span className="step-number">4</span>
-                    <span className="step-text">Wait for payment confirmation</span>
-                  </div>
-                </div>
+
+              {/* Debug Info */}
+              <div style={{ fontSize: '10px', color: '#666', marginTop: '10px', textAlign: 'center' }}>
+                DEBUG: showQRCode={showQRCode.toString()}, qrCodeUrl exists={!!qrCodeUrl}, paymentConfirmed={paymentConfirmed.toString()}
               </div>
-              
-              {/* Payment Methods */}
-              <div className="supported-apps">
-                <p>Supported Apps:</p>
-                <div className="app-icons">
-                  <div className="app-icon">📱 PhonePe</div>
-                  <div className="app-icon">💚 GPay</div>
-                  <div className="app-icon">💙 Paytm</div>
-                  <div className="app-icon">🔵 BHIM</div>
-                </div>
-              </div>
-              
-              {/* Error Display */}
-              {paymentError && (
-                <div className="payment-error">
-                  <div className="error-icon">⚠️</div>
-                  <div className="error-message">{paymentError}</div>
+
+              {/* Timer */}
+              {paymentStatus === 'pending' && (
+                <div className="payment-timer">
+                  <p>Order will be placed automatically in: <span className="timer-text">10 seconds</span></p>
+                  <div className="timer-progress">
+                    <div className="timer-bar"></div>
+                  </div>
                 </div>
               )}
-              
-              {/* Action Buttons */}
-              <div className="payment-actions">
-                {!paymentConfirmed ? (
-                  <>
-                    <button 
-                      className="payment-confirmed-btn"
-                      onClick={handlePaymentConfirmation}
-                      disabled={processingPayment || paymentStatus === 'processing'}
-                    >
-                      {processingPayment ? 'Processing...' : 'I have completed payment'}
-                    </button>
-                    <button 
-                      className="cancel-payment-btn"
-                      onClick={cancelPayment}
-                      disabled={processingPayment}
-                    >
-                      Cancel Payment
-                    </button>
-                  </>
-                ) : (
-                  <button 
-                    className="view-order-btn"
-                    onClick={() => navigate('/my-orders')}
+            </div>
+
+            {/* Payment Instructions */}
+            <div className="payment-instructions">
+              <h3>How to Pay:</h3>
+              <div className="instructions-list">
+                <div className="instruction-step">
+                  <span className="step-number">1</span>
+                  <span className="step-text">Open any UPI app (PhonePe, GPay, Paytm, etc.)</span>
+                </div>
+                <div className="instruction-step">
+                  <span className="step-number">2</span>
+                  <span className="step-text">Scan the QR code above</span>
+                </div>
+                <div className="instruction-step">
+                  <span className="step-number">3</span>
+                  <span className="step-text">Verify the amount (₹{total.toLocaleString('en-IN')}) and pay</span>
+                </div>
+                <div className="instruction-step">
+                  <span className="step-number">4</span>
+                  <span className="step-text">Wait for payment confirmation</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Methods */}
+            <div className="supported-apps">
+              <p>Supported Apps:</p>
+              <div className="app-icons">
+                <div className="app-icon">📱 PhonePe</div>
+                <div className="app-icon">💚 GPay</div>
+                <div className="app-icon">💙 Paytm</div>
+                <div className="app-icon">🔵 BHIM</div>
+              </div>
+            </div>
+
+            {/* Error Display */}
+            {paymentError && (
+              <div className="payment-error">
+                <div className="error-icon">⚠️</div>
+                <div className="error-message">{paymentError}</div>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="payment-actions">
+              {!paymentConfirmed ? (
+                <>
+                  <button
+                    className="payment-confirmed-btn"
+                    onClick={handlePaymentConfirmation}
+                    disabled={processingPayment || paymentStatus === 'processing'}
                   >
-                    View Order Details
+                    {processingPayment ? 'Processing...' : 'I have completed payment'}
                   </button>
-                )}
-                
-                {paymentStatus === 'failed' && (
-                  <button 
-                    className="retry-payment-btn"
-                    onClick={retryPayment}
+                  <button
+                    className="cancel-payment-btn"
+                    onClick={cancelPayment}
                     disabled={processingPayment}
                   >
-                    🔄 Retry Payment
+                    Cancel Payment
                   </button>
-                )}
-              </div>
+                </>
+              ) : (
+                <button
+                  className="view-order-btn"
+                  onClick={() => navigate('/my-orders')}
+                >
+                  View Order Details
+                </button>
+              )}
+
+              {paymentStatus === 'failed' && (
+                <button
+                  className="retry-payment-btn"
+                  onClick={retryPayment}
+                  disabled={processingPayment}
+                >
+                  🔄 Retry Payment
+                </button>
+              )}
             </div>
           </div>
         </div>
-      )}
+      </div>
+    )}
 
-      {/* Dummy Payment Modal for UPI, Card, Net Banking */}
-      {showDummyPayment && (
-        <div className="qr-payment-overlay">
-          <div className="qr-payment-modal">
-            <div className="qr-payment-header">
-              <div className="qr-header-content">
-                <div className="qr-header-icon">
-                  {dummyPaymentMethod === 'upi' && '📱'}
-                  {dummyPaymentMethod === 'card' && '💳'}
-                  {dummyPaymentMethod === 'net_banking' && '🏦'}
-                </div>
-                <div>
-                  <h2>
-                    {dummyPaymentMethod === 'upi' && 'UPI Payment'}
-                    {dummyPaymentMethod === 'card' && 'Card Payment'}
-                    {dummyPaymentMethod === 'net_banking' && 'Net Banking Payment'}
-                  </h2>
-                  <p className="qr-header-subtitle">Enter payment details to complete your order</p>
-                </div>
+    {/* Dummy Payment Modal for UPI, Card, Net Banking */}
+    {showDummyPayment && (
+      <div className="qr-payment-overlay">
+        <div className="qr-payment-modal">
+          <div className="qr-payment-header">
+            <div className="qr-header-content">
+              <div className="qr-header-icon">
+                {dummyPaymentMethod === 'upi' && '📱'}
+                {dummyPaymentMethod === 'card' && '💳'}
+                {dummyPaymentMethod === 'net_banking' && '🏦'}
               </div>
-              <button 
-                className="close-qr-modal"
-                onClick={() => setShowDummyPayment(false)}
-                disabled={processingPayment}
-              >
-                ×
-              </button>
+              <div>
+                <h2>
+                  {dummyPaymentMethod === 'upi' && 'UPI Payment'}
+                  {dummyPaymentMethod === 'card' && 'Card Payment'}
+                  {dummyPaymentMethod === 'net_banking' && 'Net Banking Payment'}
+                </h2>
+                <p className="qr-header-subtitle">Enter payment details to complete your order</p>
+              </div>
             </div>
-            
-            <div className="qr-payment-content">
-              {/* Payment Status */}
-              <div className={`payment-status-indicator ${paymentStatus}`}>
-                <div className="status-icon">
-                  {paymentStatus === 'pending' && '⏳'}
-                  {paymentStatus === 'processing' && '⚡'}
-                  {paymentStatus === 'completed' && '✅'}
-                  {paymentStatus === 'failed' && '❌'}
-                </div>
-                <div className="status-text">
-                  {paymentStatus === 'pending' && 'Waiting for payment...'}
-                  {paymentStatus === 'processing' && 'Processing payment...'}
-                  {paymentStatus === 'completed' && 'Payment successful!'}
-                  {paymentStatus === 'failed' && 'Payment failed'}
-                </div>
-              </div>
+            <button
+              className="close-qr-modal"
+              onClick={() => setShowDummyPayment(false)}
+              disabled={processingPayment}
+            >
+              ×
+            </button>
+          </div>
 
-              {/* Order and Transaction Details */}
-              <div className="payment-details">
-                <div className="detail-row">
-                  <span className="detail-label">Order ID:</span>
-                  <span className="detail-value">#{dummyOrderId?.slice(-8).toUpperCase()}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">Amount:</span>
-                  <span className="detail-value amount">₹{total.toLocaleString('en-IN')}</span>
-                </div>
+          <div className="qr-payment-content">
+            {/* Payment Status */}
+            <div className={`payment-status-indicator ${paymentStatus}`}>
+              <div className="status-icon">
+                {paymentStatus === 'pending' && '⏳'}
+                {paymentStatus === 'processing' && '⚡'}
+                {paymentStatus === 'completed' && '✅'}
+                {paymentStatus === 'failed' && '❌'}
               </div>
+              <div className="status-text">
+                {paymentStatus === 'pending' && 'Waiting for payment...'}
+                {paymentStatus === 'processing' && 'Processing payment...'}
+                {paymentStatus === 'completed' && 'Payment successful!'}
+                {paymentStatus === 'failed' && 'Payment failed'}
+              </div>
+            </div>
 
-              {/* Product Details */}
-              <div className="product-details-section">
-                <h4>Product Details</h4>
-                {effectiveItems.map((item, index) => (
-                  <div key={index} className="product-detail-item">
-                    <div className="product-info">
-                      <span className="product-name">{item.name || 'Product Name'}</span>
-                      <span className="product-quantity">Qty: {item.quantity || 1}</span>
-                    </div>
-                    <span className="product-price">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
+            {/* Order and Transaction Details */}
+            <div className="payment-details">
+              <div className="detail-row">
+                <span className="detail-label">Order ID:</span>
+                <span className="detail-value">#{dummyOrderId?.slice(-8).toUpperCase()}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Amount:</span>
+                <span className="detail-value amount">₹{total.toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+
+            {/* Product Details */}
+            <div className="product-details-section">
+              <h4>Product Details</h4>
+              {effectiveItems.map((item, index) => (
+                <div key={index} className="product-detail-item">
+                  <div className="product-info">
+                    <span className="product-name">{item.name || 'Product Name'}</span>
+                    <span className="product-quantity">Qty: {item.quantity || 1}</span>
                   </div>
-                ))}
-              </div>
-              
-              {/* Payment Form */}
-              <div className="payment-form-section">
-                <h3>Payment Details</h3>
-                <div className="payment-form">
-                  {dummyPaymentMethod === 'upi' && (
+                  <span className="product-price">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Payment Form */}
+            <div className="payment-form-section">
+              <h3>Payment Details</h3>
+              <div className="payment-form">
+                {dummyPaymentMethod === 'upi' && (
+                  <div className="form-group">
+                    <label>UPI ID</label>
+                    <input
+                      type="text"
+                      placeholder="Enter UPI ID (e.g., user@paytm)"
+                      className="payment-input"
+                    />
+                  </div>
+                )}
+
+                {dummyPaymentMethod === 'card' && (
+                  <>
                     <div className="form-group">
-                      <label>UPI ID</label>
-                      <input 
-                        type="text" 
-                        placeholder="Enter UPI ID (e.g., user@paytm)"
+                      <label>Card Number</label>
+                      <input
+                        type="text"
+                        placeholder="1234 5678 9012 3456"
                         className="payment-input"
                       />
                     </div>
-                  )}
-                  
-                  {dummyPaymentMethod === 'card' && (
-                    <>
+                    <div className="form-row">
                       <div className="form-group">
-                        <label>Card Number</label>
-                        <input 
-                          type="text" 
-                          placeholder="1234 5678 9012 3456"
+                        <label>Expiry Date</label>
+                        <input
+                          type="text"
+                          placeholder="MM/YY"
                           className="payment-input"
                         />
                       </div>
-                      <div className="form-row">
-                        <div className="form-group">
-                          <label>Expiry Date</label>
-                          <input 
-                            type="text" 
-                            placeholder="MM/YY"
-                            className="payment-input"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label>CVV</label>
-                          <input 
-                            type="text" 
-                            placeholder="123"
-                            className="payment-input"
-                          />
-                        </div>
+                      <div className="form-group">
+                        <label>CVV</label>
+                        <input
+                          type="text"
+                          placeholder="123"
+                          className="payment-input"
+                        />
                       </div>
+                    </div>
+                  </>
+                )}
+
+                {dummyPaymentMethod === 'net_banking' && (
+                  <div className="form-group">
+                    <label>Bank Account</label>
+                    <input
+                      type="text"
+                      placeholder="Enter bank account number"
+                      className="payment-input"
+                    />
+                  </div>
+                )}
+
+                <button
+                  className="payment-confirmed-btn"
+                  onClick={handleDummyPaymentSubmit}
+                  disabled={processingPayment || paymentStatus === 'processing'}
+                >
+                  {processingPayment ? (
+                    <>
+                      <div className="btn-spinner"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      💳 Complete Payment
                     </>
                   )}
-                  
-                  {dummyPaymentMethod === 'net_banking' && (
-                    <div className="form-group">
-                      <label>Bank Account</label>
-                      <input 
-                        type="text" 
-                        placeholder="Enter bank account number"
-                        className="payment-input"
-                      />
-                    </div>
-                  )}
-                  
-                  <button 
-                    className="payment-confirmed-btn"
-                    onClick={handleDummyPaymentSubmit}
-                    disabled={processingPayment || paymentStatus === 'processing'}
-                  >
-                    {processingPayment ? (
-                      <>
-                        <div className="btn-spinner"></div>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        💳 Complete Payment
-                      </>
-                    )}
-                  </button>
-                </div>
+                </button>
               </div>
             </div>
           </div>
         </div>
-      )}
-      
-      <Footer />
-    </>
-  );
+      </div>
+    )}
+
+    <Footer />
+  </>
+);
 }

@@ -8,7 +8,7 @@ import { PaymentValidation } from '../utils/paymentValidation';
 
 export class PaymentService {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL || '/api';
+    this.baseURL = import.meta.env.VITE_API_URL || 'https://ahalya-tex-3.onrender.com';
     this.endpoints = {
       orders: '/orders',
       payment: {
