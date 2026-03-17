@@ -1367,6 +1367,20 @@ export default function Checkout() {
                   <span className="detail-value amount">₹{total.toLocaleString('en-IN')}</span>
                 </div>
               </div>
+
+              {/* Product Details */}
+              <div className="product-details-section">
+                <h4>Product Details</h4>
+                {effectiveItems.map((item, index) => (
+                  <div key={index} className="product-detail-item">
+                    <div className="product-info">
+                      <span className="product-name">{item.name || 'Product Name'}</span>
+                      <span className="product-quantity">Qty: {item.quantity || 1}</span>
+                    </div>
+                    <span className="product-price">₹{((item.price || 0) * (item.quantity || 1)).toLocaleString('en-IN')}</span>
+                  </div>
+                ))}
+              </div>
               
               {/* Payment Form */}
               <div className="payment-form-section">
